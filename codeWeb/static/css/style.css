@@ -1,0 +1,61 @@
+html, body{
+    width: 100%;
+    height: 100%;
+}
+.vn{
+    font-size: 12vw;
+}
+.en{
+    font-size: 8vw;
+}
+.vn1{
+    font-size: 9vw;
+}
+.en1{
+    font-size: 6vw;
+}
+img{
+    width: 50vw;
+    height: 50vw;
+}
+.img1{
+    width: 40vw;
+    height: 40vw;
+}
+.img2{
+    width: 70vw;
+    height: 70vw;
+}
+
+
+.home{
+    height: 100%;
+    background-color: white;
+    font-family: 'Lobster';
+    padding-top: 40vw;
+}
+
+.successfully{
+    height: 100%;
+    background-color: white;
+    font-family: 'Lobster';
+    padding-top: 10vw;
+}
+.wrong{
+    height: 100%;
+    background-color: white;
+    font-family: 'Lobster';
+    padding-top: 10vw;
+}
+
+.check-camera{
+    height: 100%;
+    background-color: white;
+    font-family: 'Lobster';
+    padding-top: 10vw;
+}
+
+
+
+
+

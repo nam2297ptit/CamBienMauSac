@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title><%=title%></title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <script src="js/jquery.js"></script>
+        <script src="js/popper.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/Chart.js"></script>
+        <link rel="stylesheet" href="css/font.css" />
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            const socket = io.connect();
+            $(document).ready(function() {
+                socket.on("color", function(data) {
+                    console.log(JSON.parse(data));
+                    document.getElementById("red").value = JSON.parse(data).R;
+                    document.getElementById("green").value = JSON.parse(data).G;
+                    document.getElementById("blue").value = JSON.parse(data).B;
+                    document.getElementById("id1").style.backgroundColor =
+                        "rgb(" +
+                        JSON.parse(data).R +
+                        "," +
+                        JSON.parse(data).G +
+                        "," +
+                        JSON.parse(data).B +
+                        ")";
+                });
+              
+            });
+            //Hàm đếm sản phẩm
+            var value_red = 0;
+            var value_green = 0;
+            var value_blue = 0;
+            
+            socket.on("product", function(data) {
+			     console.log("DEM")
+                // Kiểm tra xem data gửi lên là red, green, blue và tăng các biến đếm tương ứng với sản phẩm lên 1
+                // Sau khi tăng gán giá trị và hiển thị lên giao diện bằng hàm  document.getElementById(#).innerHTML
+				
+                if (data === "red") {
+                    value_red += 1;
+                    document.getElementById("red_product").innerHTML = value_red;
+					document.getElementById("time").innerHTML = formatDate(new Date());
+					console.log(new Date());
+                } else if (data === "green") {
+                    value_green += 1;
+                    document.getElementById("green_product").innerHTML = value_green;
+					document.getElementById("time").innerHTML = formatDate(new Date());
+                } else {
+                    value_blue += 1;
+                    document.getElementById("blue_product").innerHTML = value_blue;
+					document.getElementById("time").innerHTML = formatDate(new Date());
+                }
+            });
+			function formatDate(date) { 
+                var hour = date.getHours();
+				var minute = date.getMinutes()
+                var second = date.getSeconds()
+
+					
+
+                var day = date.getDate(); 
+                if (day < 10) { 
+                    day = "0" + day; 
+                } 
+                var month = date.getMonth() + 1; 
+                if (month < 10) { 
+                    month = "0" + month; 
+                } 
+                var year = date.getFullYear(); 
+                return day + "/" + month + "/" + year + "     "+ hour+":"+ minute+":"+second; 
+            } 
+            function rgb() {
+                document.getElementById("id1").style.backgroundColor =
+                    "rgb(" +
+                    JSON.parse(data).R +
+                    "," +
+                    JSON.parse(data).G +
+                    "," +
+                    JSON.parse(data).B +
+                    ")";
+            }
+
+            //Hàm lấy dữ liệu cảm biến
+            socket.on("sensor", function(data) {
+                    console.log(JSON.parse(data).Humidity, JSON.parse(data).Temperature);
+                    document.getElementById("humidity").innerHTML = JSON.parse(data).Humidity;
+                    document.getElementById("temperature").innerHTML = JSON.parse(data).Temperature;
+            });
+
+        </script>
+    </head>
+
+    <body>
+        <h3 class="text-center m-3 font-weight-bold">Color Sensor</h3>
+        <div class="text-center">
+            <h3 class="text-danger m-3 font-weight-bold d-inline">
+                R:
+                <input
+                    id="red"
+                    type="text"
+                    size="3"
+                    maxlength="3"
+                    name="r"
+                    value="0"
+                    onBlur="rgb()"
+                />
+            </h3>
+            <h3 class="text-success m-3 font-weight-bold d-inline">
+                G:
+                <input
+                    id="green"
+                    type="text"
+                    size="3"
+                    maxlength="3"
+                    name="g"
+                    value="0"
+                    onBlur="rgb()"
+                />
+            </h3>
+            <h3 class="text-primary m-3 font-weight-bold d-inline">
+                B:
+                <input
+                    id="blue"
+                    type="text"
+                    size="3"
+                    maxlength="3"
+                    name="b"
+                    value="0"
+                    onBlur="rgb()"
+                />
+            </h3>
+        </div>
+
+        <center class="mt-4">
+            <textarea id="id1" cols="50" rows="10"></textarea>
+        </center>
+
+        <center>
+            <h2 class="text-center m-3 font-weight-bold">Product</h2>
+
+            <h3 class="text-danger m-3 font-weight-bold d-inline">
+                Red Product:
+            </h3>
+            <h3 class="d-inline" id="red_product">0</h3>
+            <h3 class="text-success m-3 font-weight-bold d-inline">
+                Green Product:
+            </h3>
+            <h3 class="d-inline" id="green_product">0</h3>
+            <h3 class="text-primary m-3 font-weight-bold d-inline">
+                Blue Product:
+            </h3>
+            <h3 class="d-inline" id="blue_product">0</h3>
+        </center>
+        <center><h1 id="time"></h1></center>
+        
+        <center>
+            <div class="card col-sm-5">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm">             
+                        <h4 class="text-primary" id="humitidy">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQSXg5MOtY5Zal6IdqlbnJkkKuXVsnf-Z4eDDNco3C5xzVGSeJh" alt="..." class="img-thumbnail" width="65px">
+                            Humidity: <span class="mt-1" id="humidity"> 0 </span>%
+                        </h4>
+                    </div>
+                    <div class="col-sm">
+                        <h4 class="text-danger"> 
+                            <img src="https://thumbs.dreamstime.com/b/thermometer-vector-sun-heat-temperature-icon-thermometer-vector-icon-sun-heat-temperature-scale-summer-weather-119319936.jpg" alt="..." class="img-thumbnail" width="65px"> 
+                            Temperature: <span class="mt-1" id="temperature"> 0 </span>°C
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </center>
+
+    </body>
+</html>
